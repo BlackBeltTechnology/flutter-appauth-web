@@ -116,7 +116,7 @@ class AppAuthWebPlugin extends FlutterAppAuthPlatform {
         html.window.sessionStorage[_CODE_VERIFIER_STORAGE] = codeVerifier;
         html.window.location.assign(authUri);
         return null;
-        //loginResult = await openPopUp(authUri, 'auth', 640, 600, true);
+        // loginResult = await openPopUp(authUri, 'auth', 640, 600, true);
       }
     } on StateError catch (err) {
       throw StateError(_AUTHORIZE_ERROR_MESSAGE_FORMAT
@@ -189,9 +189,7 @@ class AppAuthWebPlugin extends FlutterAppAuthPlatform {
     html.window.sessionStorage.remove(_AUTH_RESPONSE_INFO);
     final codeVerifier = html.window.sessionStorage[_CODE_VERIFIER_STORAGE];
     html.window.sessionStorage.remove(_CODE_VERIFIER_STORAGE);
-
     final authResult = processLoginResult(authUrl, codeVerifier);
-
     final tokenResponse = await requestToken(TokenRequest(
         request.clientId, request.redirectUrl,
         clientSecret: request.clientSecret,
@@ -228,13 +226,16 @@ class AppAuthWebPlugin extends FlutterAppAuthPlatform {
           .replaceAll("%2", error));
 
     var authCode = resultUri.queryParameters['code'];
-    if (authCode == null || authCode.isEmpty)
-      throw ArgumentError(_AUTHORIZE_ERROR_MESSAGE_FORMAT
-          .replaceAll("%1", _AUTHORIZE_ERROR_CODE)
-          .replaceAll("%2", 'Login request returned no code'));
+    // if (authCode == null || authCode.isEmpty)
+    //   throw ArgumentError(_AUTHORIZE_ERROR_MESSAGE_FORMAT
+    //       .replaceAll("%1", _AUTHORIZE_ERROR_CODE)
+    //       .replaceAll("%2", 'Login request returned no code'));
 
-    return AuthorizationResponse(
-        authCode, codeVerifier, resultUri.queryParameters);
+    if (authCode != null && !authCode.isEmpty) {
+      return AuthorizationResponse(
+          authCode, codeVerifier, resultUri.queryParameters);
+    }
+    return null;
   }
 
   static Future<AuthorizationTokenResponse> exchangeCode(
