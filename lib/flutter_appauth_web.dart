@@ -198,7 +198,7 @@ class AppAuthWebPlugin extends FlutterAppAuthPlatform {
         additionalParameters: request.additionalParameters,
         allowInsecureConnections: request.allowInsecureConnections!,
         authorizationCode: authResult!.authorizationCode,
-        codeVerifier: authResult!.codeVerifier,
+        codeVerifier: authResult.codeVerifier,
         discoveryUrl: request.discoveryUrl,
         grantType: "authorization_code",
         issuer: request.issuer));
@@ -231,7 +231,7 @@ class AppAuthWebPlugin extends FlutterAppAuthPlatform {
     //       .replaceAll("%1", _AUTHORIZE_ERROR_CODE)
     //       .replaceAll("%2", 'Login request returned no code'));
 
-    if (authCode != null && !authCode.isEmpty) {
+    if (authCode != null && authCode.isNotEmpty) {
       return AuthorizationResponse(
           authCode, codeVerifier, resultUri.queryParameters);
     }
@@ -293,9 +293,9 @@ class AppAuthWebPlugin extends FlutterAppAuthPlatform {
 
   //to-do Cache this based on the url
   static Future<AuthorizationServiceConfiguration> getConfiguration(
-      AuthorizationServiceConfiguration serviceConfiguration,
-      String discoveryUrl,
-      String issuer) async {
+      AuthorizationServiceConfiguration? serviceConfiguration,
+      String? discoveryUrl,
+      String? issuer) async {
     if ((discoveryUrl == null || discoveryUrl == '') &&
         (issuer == null || issuer == '') &&
         serviceConfiguration == null)
